@@ -18,6 +18,7 @@ const authSlice = createSlice({
 export const authActions = authSlice.actions;
 
 const login = (name, password) => async (dispatch) => {
+  console.log(name, password);
   try {
     // const { authUsername, role, jwtToken } = await authService.login(username, password);
     dispatch(authActions.setAuthData({

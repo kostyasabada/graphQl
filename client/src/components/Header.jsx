@@ -14,11 +14,11 @@ export const Header = ({
   component,
 }) => {
   const authData = useSelector(AuthSelector);
-  console.log(authData);
+  // console.log(authData);
   const [user, setUser] = useState(authData);
 
   useEffect(() => {
-    console.log('HEADER');
+    // console.log('HEADER');
   }, []);
   // const dispatch = useAppDispatch();
 

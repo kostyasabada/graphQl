@@ -7,6 +7,21 @@ import { createServer } from 'http';
 import { errorMiddleware } from './middlewares/error';
 import { IController } from './interfaces';
 import { TYPES } from './@types';
+import { createHandler } from 'graphql-http/lib/use/express';
+
+import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql';
+
+const schema = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: 'Query',
+    fields: {
+      hello: {
+        type: GraphQLString,
+        resolve:() => 'world',
+      },
+    },
+  }),
+});
 
 @injectable()
 class Server {
@@ -21,6 +36,7 @@ class Server {
 
 
   createApp(app: any, baseRouter: Router, errorMiddleware: any) {
+
     app.use(
       cors({
         exposedHeaders: 'jwt-token',
@@ -31,8 +47,12 @@ class Server {
     app.use(express.json({ limit: '2MB' }));
 
     app.use(express.static(__dirname + '/public'));
+    app.all(
+      '/graphql',
+      createHandler({ schema })
+    );
 
-    app.use('/api', baseRouter);
+    // app.use('/graphql', baseRouter);
 
     app.get('*', (req: Request, res: Response) => {
       res.sendFile(__dirname + '/public/index.html');
@@ -48,8 +68,8 @@ class Server {
     try{
       // Create and start the server
 
-      console.log('STARTTTTT');
-      
+      console.log('START');
+
       const port = Number(process.env.PORT || 8081);
 
       const app = this.createApp(express(), this._baseRouter.getRouter(), errorMiddleware);
@@ -60,8 +80,6 @@ class Server {
       server.listen(port, () => {console.log(`${chalk.green('Express server started')} on port: ${port}`)})
 
     } catch (e) {
-      console.log(e);
-      
     }
 
   }
