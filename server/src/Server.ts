@@ -13,15 +13,19 @@ import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql';
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
-    name: 'Query',
+    name: 'addTodo',
     fields: {
-      hello: {
+      login: {
         type: GraphQLString,
-        resolve:() => 'world',
+        resolve:(req) => {
+          console.log(req);
+          
+          return 'world'
+        },
       },
     },
   }),
-});
+},);
 
 @injectable()
 class Server {
@@ -50,6 +54,10 @@ class Server {
     app.all(
       '/graphql',
       createHandler({ schema })
+      // (req: any, res: any) => {
+      //   console.log(req);
+        
+      // }
     );
 
     // app.use('/graphql', baseRouter);

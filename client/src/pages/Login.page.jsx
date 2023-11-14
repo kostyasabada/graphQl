@@ -15,6 +15,8 @@ import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../store/hooks';
 import { authThunks } from '../store/slices/auth.slice';
+import {  useState } from 'react';
+import { gql, useApolloClient, useLazyQuery } from '@apollo/client';
 
 
 
@@ -32,7 +34,18 @@ const useStyle = makeStyles()(() => ({
   }
 }));
 
+ const LOGIN = gql`
+  {
+    login
+  }
+`;
+
 const LoginPage = () => {
+
+
+  const [login, { data, loading, called, refetch }] = useLazyQuery(LOGIN);
+  console.log(data);
+
   const dispatch = useAppDispatch();
   const { classes, cx } = useStyle();
   const navigate = useNavigate();
@@ -72,10 +85,14 @@ const LoginPage = () => {
             }}
             onSubmit={async (values) => {
               console.log(values);
-              const success = await dispatch(authThunks.login(values.username, values.password));
-              if (success) {
-                navigate('/users');
-              }
+              login({variables: {username: values.username}});
+
+
+              // setUser({name: values.username, password: values.password})
+              // const success = await dispatch(authThunks.login(values.username, values.password));
+              // if (success) {
+              //   navigate('/users');
+              // }
             }}
           >
             {(props) => (

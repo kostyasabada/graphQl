@@ -47,8 +47,8 @@ function App() {
           path="/login"
           element={
             <Layout>
-              {/* <LoginPage /> */}
-              <DisplayLocations />
+              <LoginPage />
+              {/* <DisplayLocations /> */}
             </Layout>
           }
         />
